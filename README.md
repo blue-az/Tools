@@ -120,6 +120,8 @@ Disconnect:
 ```bash
 ./cb-tablet.sh stop
 ```
+Troubleshoot:
+- If the tablet shows extend mode after a mirror session, stop everything (`cbs`) then rerun mirror + tablet (`cbmr` alias if present, or `./cb-display.sh mirror && ./cb-tablet.sh`).
 
 ## Requirements
 

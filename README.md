@@ -11,6 +11,8 @@ Use Chromebook (Debian) as a display for Fedora/Sway hosts (Z13 or Desktop) over
 
 ## Quick Start
 
+Cheatsheet: `cb-link-cheatsheet.txt` (USB copy lives at `/run/media/blueaz/F1E0-14F6/cb-link-cheatsheet.txt`).
+
 ### Extend Mode (2nd screen)
 ```bash
 # On Fedora host (Z13 or Desktop):
@@ -134,6 +136,10 @@ Troubleshoot:
 - TigerVNC viewer: `sudo apt install tigervnc-viewer`
 - SSVNC (for mirror scaling): `sudo apt install ssvnc`
 - avahi: `sudo apt install avahi-daemon` (for hostname.local)
+
+**Tablet (optional, USB ADB reverse):**
+- Samsung Galaxy Note 8.0 (GT-N5110), LineageOS 7.1.2, Wi-Fi only
+- USB debugging enabled; ADB root available (ADB-only)
 
 ## Network
 

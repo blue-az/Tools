@@ -1,0 +1,400 @@
+/* Device Map - Interactive Office Setup */
+
+:root {
+    --color-bg: #0d1117;
+    --color-surface: #161b22;
+    --color-border: #30363d;
+    --color-text: #e6edf3;
+    --color-text-muted: #8b949e;
+    --color-accent: #58a6ff;
+    --color-machine: #3fb950;
+    --color-monitor: #a371f7;
+    --color-device: #f0883e;
+    --color-primary: #238636;
+    --color-rooted: #da3633;
+    --color-ios: #0a84ff;
+}
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+    background: var(--color-bg);
+    color: var(--color-text);
+    min-height: 100vh;
+    line-height: 1.5;
+}
+
+/* Header */
+header {
+    text-align: center;
+    padding: 2rem 1rem 1rem;
+}
+
+header h1 {
+    font-size: 2rem;
+    font-weight: 600;
+    margin-bottom: 0.25rem;
+}
+
+.subtitle {
+    color: var(--color-text-muted);
+    font-size: 1rem;
+    margin-bottom: 1rem;
+}
+
+.legend {
+    display: flex;
+    justify-content: center;
+    gap: 1.5rem;
+    flex-wrap: wrap;
+}
+
+.legend-item {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.875rem;
+    color: var(--color-text-muted);
+}
+
+.legend-item::before {
+    content: '';
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+}
+
+.legend-item.machines::before {
+    background: var(--color-machine);
+}
+
+.legend-item.monitors::before {
+    background: var(--color-monitor);
+}
+
+.legend-item.devices::before {
+    background: var(--color-device);
+}
+
+/* Device Map Container */
+.device-map {
+    position: relative;
+    max-width: 1400px;
+    margin: 1rem auto;
+    padding: 0 1rem;
+}
+
+.office-photo {
+    width: 100%;
+    height: auto;
+    display: block;
+    border-radius: 8px;
+    border: 1px solid var(--color-border);
+}
+
+/* Hotspots */
+.hotspot {
+    position: absolute;
+    cursor: pointer;
+    border: 2px solid transparent;
+    border-radius: 6px;
+    transition: all 0.3s ease;
+    z-index: 10;
+}
+
+.hotspot::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    opacity: 0.9;
+}
+
+.hotspot.machine::after {
+    background: var(--color-machine);
+    box-shadow: 0 0 10px var(--color-machine);
+}
+
+.hotspot.monitor::after {
+    background: var(--color-monitor);
+    box-shadow: 0 0 10px var(--color-monitor);
+}
+
+.hotspot.device::after {
+    background: var(--color-device);
+    box-shadow: 0 0 10px var(--color-device);
+}
+
+/* Pulse animation */
+.pulse {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    animation: pulse 2s ease-out infinite;
+}
+
+.hotspot.machine .pulse {
+    background: var(--color-machine);
+}
+
+.hotspot.monitor .pulse {
+    background: var(--color-monitor);
+}
+
+.hotspot.device .pulse {
+    background: var(--color-device);
+}
+
+@keyframes pulse {
+    0% {
+        transform: translate(-50%, -50%) scale(0.5);
+        opacity: 0.8;
+    }
+    100% {
+        transform: translate(-50%, -50%) scale(2);
+        opacity: 0;
+    }
+}
+
+/* Hotspot hover state */
+.hotspot:hover,
+.hotspot.pinned {
+    background: rgba(88, 166, 255, 0.1);
+}
+
+.hotspot.machine:hover,
+.hotspot.machine.pinned {
+    border-color: var(--color-machine);
+    background: rgba(63, 185, 80, 0.15);
+}
+
+.hotspot.monitor:hover,
+.hotspot.monitor.pinned {
+    border-color: var(--color-monitor);
+    background: rgba(163, 113, 247, 0.15);
+}
+
+.hotspot.device:hover,
+.hotspot.device.pinned {
+    border-color: var(--color-device);
+    background: rgba(240, 136, 62, 0.15);
+}
+
+/* Tooltips */
+.tooltip {
+    display: none;
+    position: absolute;
+    left: 100%;
+    top: 0;
+    margin-left: 10px;
+    width: 280px;
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: 8px;
+    padding: 1rem;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+    z-index: 100;
+    animation: fadeIn 0.2s ease;
+}
+
+.tooltip-top {
+    top: auto;
+    bottom: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+    margin-left: 0;
+    margin-bottom: 10px;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(-5px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.tooltip-top {
+    animation: fadeInTop 0.2s ease;
+}
+
+@keyframes fadeInTop {
+    from {
+        opacity: 0;
+        transform: translate(-50%, 5px);
+    }
+    to {
+        opacity: 1;
+        transform: translate(-50%, 0);
+    }
+}
+
+.hotspot:hover .tooltip,
+.hotspot.pinned .tooltip {
+    display: block;
+}
+
+.tooltip h3 {
+    font-size: 1rem;
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+    color: var(--color-text);
+}
+
+/* Badges */
+.badge {
+    display: inline-block;
+    font-size: 0.7rem;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    padding: 0.2rem 0.5rem;
+    border-radius: 4px;
+    margin-bottom: 0.75rem;
+    background: var(--color-border);
+    color: var(--color-text-muted);
+}
+
+.badge.primary {
+    background: var(--color-primary);
+    color: white;
+}
+
+.badge.rooted {
+    background: var(--color-rooted);
+    color: white;
+}
+
+.badge.ios {
+    background: var(--color-ios);
+    color: white;
+}
+
+/* Tooltip tables */
+.tooltip table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.8rem;
+}
+
+.tooltip td {
+    padding: 0.25rem 0;
+    border-bottom: 1px solid var(--color-border);
+}
+
+.tooltip td:first-child {
+    color: var(--color-text-muted);
+    width: 40%;
+}
+
+.tooltip td:last-child {
+    text-align: right;
+    font-family: 'SF Mono', 'Monaco', 'Consolas', monospace;
+    font-size: 0.75rem;
+}
+
+.tooltip tr:last-child td {
+    border-bottom: none;
+}
+
+/* Tooltip notes and roles */
+.tooltip .note,
+.tooltip .role {
+    font-size: 0.75rem;
+    color: var(--color-text-muted);
+    margin-top: 0.75rem;
+    padding-top: 0.5rem;
+    border-top: 1px solid var(--color-border);
+}
+
+.tooltip .role {
+    color: var(--color-accent);
+}
+
+/* Footer */
+footer {
+    text-align: center;
+    padding: 2rem 1rem;
+    color: var(--color-text-muted);
+    font-size: 0.875rem;
+}
+
+footer code {
+    background: var(--color-surface);
+    padding: 0.2rem 0.4rem;
+    border-radius: 4px;
+    font-size: 0.8rem;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    header h1 {
+        font-size: 1.5rem;
+    }
+
+    .tooltip {
+        position: fixed;
+        left: 50% !important;
+        top: auto !important;
+        bottom: 1rem !important;
+        transform: translateX(-50%) !important;
+        margin: 0 !important;
+        width: calc(100% - 2rem);
+        max-width: 320px;
+    }
+
+    .hotspot::after {
+        width: 16px;
+        height: 16px;
+    }
+
+    .pulse {
+        width: 32px;
+        height: 32px;
+    }
+
+    /* Increase hotspot tap targets on mobile */
+    .hotspot {
+        min-width: 40px;
+        min-height: 40px;
+    }
+}
+
+/* High contrast mode for better visibility */
+@media (prefers-contrast: high) {
+    .hotspot::after {
+        opacity: 1;
+    }
+
+    .tooltip {
+        border-width: 2px;
+    }
+}
+
+/* Reduce motion for accessibility */
+@media (prefers-reduced-motion: reduce) {
+    .pulse {
+        animation: none;
+    }
+
+    .tooltip {
+        animation: none;
+    }
+}
+

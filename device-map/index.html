@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Device Map - Office Setup</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <header>
+        <h1>Interactive Device Map</h1>
+        <p class="subtitle">Hover over devices to see specs</p>
+        <div class="legend">
+            <span class="legend-item machines">Machines</span>
+            <span class="legend-item monitors">Monitors</span>
+            <span class="legend-item devices">Mobile Devices</span>
+        </div>
+    </header>
+
+    <main class="device-map">
+        <img src="office.jpg" alt="Office setup with multiple monitors and devices" class="office-photo">
+
+        <!-- MONITORS (4) -->
+
+        <!-- Main LG TV - 4K -->
+        <div class="hotspot monitor" data-device="lg-tv-main" style="left: 4.9%; top: 22.6%; width: 30%; height: 40%;">
+            <div class="pulse"></div>
+            <div class="tooltip">
+                <h3>Main LG TV</h3>
+                <span class="badge">4K Display</span>
+                <table>
+                    <tr><td>Resolution</td><td>3840x2160</td></tr>
+                    <tr><td>Refresh</td><td>60Hz</td></tr>
+                    <tr><td>Connection</td><td>HDMI-A-1</td></tr>
+                    <tr><td>Year</td><td>2020</td></tr>
+                </table>
+                <p class="note">Primary display - enable PC/Game Mode for best results</p>
+            </div>
+        </div>
+
+        <!-- XB271HU - Gaming Monitor -->
+        <div class="hotspot monitor" data-device="xb271hu" style="left: 80.4%; top: 31.9%; width: 15%; height: 35%;">
+            <div class="pulse"></div>
+            <div class="tooltip">
+                <h3>Acer Predator XB271HU</h3>
+                <span class="badge">Gaming</span>
+                <table>
+                    <tr><td>Panel</td><td>27" IPS</td></tr>
+                    <tr><td>Resolution</td><td>2560x1440</td></tr>
+                    <tr><td>Refresh</td><td>144Hz (165Hz OC)</td></tr>
+                    <tr><td>G-Sync</td><td>Yes (hardware)</td></tr>
+                    <tr><td>Connection</td><td>DP-2</td></tr>
+                </table>
+                <p class="note">Use 60Hz for desktop (40W idle) vs 144Hz (160W idle)</p>
+            </div>
+        </div>
+
+        <!-- Acer AL2216W -->
+        <div class="hotspot monitor" data-device="acer-al2216w" style="left: 70.5%; top: 35.9%; width: 8%; height: 25%;">
+            <div class="pulse"></div>
+            <div class="tooltip">
+                <h3>Acer AL2216W</h3>
+                <span class="badge">Secondary</span>
+                <table>
+                    <tr><td>Panel</td><td>22" TN</td></tr>
+                    <tr><td>Resolution</td><td>1680x1050</td></tr>
+                    <tr><td>Refresh</td><td>60Hz</td></tr>
+                    <tr><td>Connection</td><td>DP-3 (adapter)</td></tr>
+                </table>
+                <p class="note">Good for terminals, chat, reference docs</p>
+            </div>
+        </div>
+
+        <!-- 2nd LG TV -->
+        <div class="hotspot monitor" data-device="lg-tv-2nd" style="left: 49%; top: 27.3%; width: 20%; height: 35%;">
+            <div class="pulse"></div>
+            <div class="tooltip">
+                <h3>2nd LG TV</h3>
+                <span class="badge">1080p</span>
+                <table>
+                    <tr><td>Resolution</td><td>1920x1080</td></tr>
+                    <tr><td>Refresh</td><td>60Hz</td></tr>
+                    <tr><td>Connection</td><td>DP-1 (adapter)</td></tr>
+                    <tr><td>Year</td><td>2011</td></tr>
+                </table>
+            </div>
+        </div>
+
+        <!-- MACHINES (8) -->
+
+        <!-- Desktop Fedora -->
+        <div class="hotspot machine" data-device="desktop-fedora" style="left: 61.3%; top: 72.9%; width: 10%; height: 25%;">
+            <div class="pulse"></div>
+            <div class="tooltip tooltip-top">
+                <h3>Desktop (Fedora)</h3>
+                <span class="badge primary">Primary Analysis</span>
+                <table>
+                    <tr><td>OS</td><td>Fedora 43 (Sway)</td></tr>
+                    <tr><td>CPU</td><td>i9-9900KF @ 5.0GHz</td></tr>
+                    <tr><td>GPU</td><td>RTX 3090</td></tr>
+                    <tr><td>Memory</td><td>64 GB</td></tr>
+                    <tr><td>Disk</td><td>488 GB (btrfs)</td></tr>
+                </table>
+                <p class="role">TennisAgent: 145 tools, Plotly viz, model training</p>
+            </div>
+        </div>
+
+        <!-- Desktop Windows (same machine, dual boot) -->
+        <div class="hotspot machine" data-device="desktop-windows" style="left: 61.8%; top: 71.8%; width: 8%; height: 20%;">
+            <div class="pulse"></div>
+            <div class="tooltip tooltip-top">
+                <h3>Desktop (Windows 11)</h3>
+                <span class="badge">Dual Boot</span>
+                <table>
+                    <tr><td>OS</td><td>Windows 11</td></tr>
+                    <tr><td>CPU</td><td>i9-9900KF @ 5.0GHz</td></tr>
+                    <tr><td>GPU</td><td>RTX 3090</td></tr>
+                    <tr><td>Memory</td><td>64 GB</td></tr>
+                    <tr><td>WM</td><td>komorebi + whkd</td></tr>
+                </table>
+                <p class="note">Same hardware as Fedora desktop</p>
+            </div>
+        </div>
+
+        <!-- Z13 Fedora -->
+        <div class="hotspot machine" data-device="z13-fedora" style="left: 71.1%; top: 49.2%; width: 15%; height: 20%;">
+            <div class="pulse"></div>
+            <div class="tooltip">
+                <h3>ROG Flow Z13 (Fedora)</h3>
+                <span class="badge">Mobile Backup</span>
+                <table>
+                    <tr><td>OS</td><td>Fedora 43 (Sway)</td></tr>
+                    <tr><td>CPU</td><td>Ryzen AI MAX 390</td></tr>
+                    <tr><td>GPU</td><td>Radeon 8050S</td></tr>
+                    <tr><td>Memory</td><td>27 GB (shared)</td></tr>
+                    <tr><td>Display</td><td>13" 2560x1600 180Hz</td></tr>
+                </table>
+                <p class="role">TennisAgent: 75% desktop perf, portable</p>
+            </div>
+        </div>
+
+        <!-- Z13 Windows -->
+        <div class="hotspot machine" data-device="z13-windows" style="left: 74.8%; top: 51.8%; width: 10%; height: 15%;">
+            <div class="pulse"></div>
+            <div class="tooltip">
+                <h3>ROG Flow Z13 (Windows)</h3>
+                <span class="badge">Dual Boot</span>
+                <table>
+                    <tr><td>OS</td><td>Windows 11 Home</td></tr>
+                    <tr><td>CPU</td><td>Ryzen AI MAX 390</td></tr>
+                    <tr><td>GPU</td><td>Radeon 8050S</td></tr>
+                    <tr><td>Memory</td><td>28 GB (shared)</td></tr>
+                    <tr><td>WM</td><td>komorebi + whkd</td></tr>
+                </table>
+            </div>
+        </div>
+
+        <!-- Mac Mini -->
+        <div class="hotspot machine" data-device="mac-mini" style="left: 62.5%; top: 65.2%; width: 8%; height: 10%;">
+            <div class="pulse"></div>
+            <div class="tooltip tooltip-top">
+                <h3>Mac Mini (2018)</h3>
+                <span class="badge">Data Collection</span>
+                <table>
+                    <tr><td>OS</td><td>macOS Sequoia 15.7</td></tr>
+                    <tr><td>CPU</td><td>i7-8700B @ 3.2GHz</td></tr>
+                    <tr><td>GPU</td><td>Intel UHD 630</td></tr>
+                    <tr><td>Memory</td><td>8 GB</td></tr>
+                    <tr><td>WM</td><td>yabai + skhd</td></tr>
+                </table>
+                <p class="role">Apple Watch integration, Garmin FIT parsing, iPhone video extraction</p>
+            </div>
+        </div>
+
+        <!-- Chromebook Lenovo -->
+        <div class="hotspot machine" data-device="chromebook-lenovo" style="left: 48.4%; top: 52.7%; width: 12%; height: 12%;">
+            <div class="pulse"></div>
+            <div class="tooltip">
+                <h3>Chromebook Lenovo</h3>
+                <span class="badge">Crostini</span>
+                <table>
+                    <tr><td>OS</td><td>Debian 12 (Crostini)</td></tr>
+                    <tr><td>CPU</td><td>i3-10110U @ 2.6GHz</td></tr>
+                    <tr><td>Memory</td><td>~2.7 GB</td></tr>
+                    <tr><td>Display</td><td>13" 3072x1728</td></tr>
+                </table>
+            </div>
+        </div>
+
+        <!-- IdeaPad U400 -->
+        <div class="hotspot machine" data-device="ideapad-u400" style="left: 48%; top: 54.5%; width: 12%; height: 12%;">
+            <div class="pulse"></div>
+            <div class="tooltip">
+                <h3>IdeaPad U400</h3>
+                <span class="badge">Debian</span>
+                <table>
+                    <tr><td>OS</td><td>Debian 12 (Sway)</td></tr>
+                    <tr><td>CPU</td><td>i5-2450M @ 3.1GHz</td></tr>
+                    <tr><td>GPU</td><td>AMD HD 6400M + Intel HD 3000</td></tr>
+                    <tr><td>Memory</td><td>~6 GB</td></tr>
+                    <tr><td>Display</td><td>14" 1366x768</td></tr>
+                </table>
+            </div>
+        </div>
+
+        <!-- Chromebook Kevin -->
+        <div class="hotspot machine" data-device="chromebook-kevin" style="left: 56.9%; top: 54.2%; width: 12%; height: 12%;">
+            <div class="pulse"></div>
+            <div class="tooltip">
+                <h3>Chromebook Kevin</h3>
+                <span class="badge">ARM</span>
+                <table>
+                    <tr><td>Model</td><td>Samsung Plus v1</td></tr>
+                    <tr><td>OS</td><td>Debian 12 (Sway)</td></tr>
+                    <tr><td>CPU</td><td>rk3399 (ARM)</td></tr>
+                    <tr><td>Memory</td><td>3.8 GB</td></tr>
+                    <tr><td>Display</td><td>12" 2400x1600</td></tr>
+                </table>
+            </div>
+        </div>
+
+        <!-- MOBILE DEVICES (4) -->
+
+        <!-- Galaxy Avant -->
+        <div class="hotspot device" data-device="galaxy-avant" style="left: 89.5%; top: 57.3%; width: 5%; height: 12%;">
+            <div class="pulse"></div>
+            <div class="tooltip">
+                <h3>Samsung Galaxy Avant</h3>
+                <span class="badge rooted">Rooted</span>
+                <table>
+                    <tr><td>Model</td><td>SM-G386T</td></tr>
+                    <tr><td>ROM</td><td>CyanogenMod</td></tr>
+                    <tr><td>Android</td><td>5.1.1 Lollipop</td></tr>
+                    <tr><td>Root</td><td>cm-su</td></tr>
+                    <tr><td>Carrier</td><td>T-Mobile</td></tr>
+                </table>
+            </div>
+        </div>
+
+        <!-- iPhone 15 Pro -->
+        <div class="hotspot device" data-device="iphone-15-pro" style="left: 2.8%; top: 88%; width: 5%; height: 12%;">
+            <div class="pulse"></div>
+            <div class="tooltip">
+                <h3>iPhone 15 Pro</h3>
+                <span class="badge ios">iOS</span>
+                <table>
+                    <tr><td>Model</td><td>MTQM3</td></tr>
+                    <tr><td>iOS</td><td>18.6.2</td></tr>
+                    <tr><td>CPU</td><td>arm64e</td></tr>
+                    <tr><td>Carrier</td><td>T-Mobile US</td></tr>
+                    <tr><td>Status</td><td>Stock (not jailbroken)</td></tr>
+                </table>
+            </div>
+        </div>
+
+        <!-- Galaxy Note 8.0 -->
+        <div class="hotspot device" data-device="galaxy-note-8" style="left: 81.8%; top: 55.1%; width: 8%; height: 15%;">
+            <div class="pulse"></div>
+            <div class="tooltip">
+                <h3>Galaxy Note 8.0</h3>
+                <span class="badge">Tablet</span>
+                <table>
+                    <tr><td>Model</td><td>GT-N5110</td></tr>
+                    <tr><td>Size</td><td>8.0" Wi-Fi</td></tr>
+                    <tr><td>ROM</td><td>LineageOS</td></tr>
+                    <tr><td>Android</td><td>7.1.2 Nougat</td></tr>
+                    <tr><td>ADB Root</td><td>Available</td></tr>
+                </table>
+            </div>
+        </div>
+
+        <!-- Galaxy S10e -->
+        <div class="hotspot device" data-device="galaxy-s10e" style="left: 87.5%; top: 58.1%; width: 5%; height: 12%;">
+            <div class="pulse"></div>
+            <div class="tooltip">
+                <h3>Galaxy S10e</h3>
+                <span class="badge rooted">Magisk Root</span>
+                <table>
+                    <tr><td>Model</td><td>SM-G970F (Exynos)</td></tr>
+                    <tr><td>ROM</td><td>LineageOS 21</td></tr>
+                    <tr><td>Android</td><td>14</td></tr>
+                    <tr><td>Root</td><td>Magisk 30.6</td></tr>
+                    <tr><td>Storage</td><td>128 GB</td></tr>
+                </table>
+                <p class="note">Unlocked bootloader, full /data access</p>
+            </div>
+        </div>
+
+    </main>
+
+    <footer>
+        <p>Hover or tap devices to see specs. Data sourced from <code>~/.dotfiles/</code></p>
+    </footer>
+
+    <script>
+        // Toggle tooltip on click (for mobile and pinning)
+        document.querySelectorAll('.hotspot').forEach(hotspot => {
+            hotspot.addEventListener('click', (e) => {
+                e.stopPropagation();
+                // Close other pinned tooltips
+                document.querySelectorAll('.hotspot.pinned').forEach(h => {
+                    if (h !== hotspot) h.classList.remove('pinned');
+                });
+                hotspot.classList.toggle('pinned');
+            });
+        });
+
+        // Close pinned tooltips when clicking elsewhere
+        document.addEventListener('click', () => {
+            document.querySelectorAll('.hotspot.pinned').forEach(h => {
+                h.classList.remove('pinned');
+            });
+        });
+    </script>
+</body>
+</html>

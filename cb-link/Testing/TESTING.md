@@ -42,7 +42,7 @@ Private testing checklist before posting to hexdump.
 
 ```
 Date: 2025-12-21
-Tester: blueaz (AMD Z13)
+Tester: <name> (AMD Z13)
 Z13 → Kevin Extend:
 Z13 → Kevin Mirror: READY - waiting for CB connection
 Desktop → Kevin Extend:
@@ -54,7 +54,7 @@ Notes:
 
 ## AMD Status (2025-12-21 20:36)
 
-**Mirror mode is LIVE on Z13 (fedora.local)**
+**Mirror mode is LIVE on host.local**
 
 Kevin, connect with:
 ```bash
@@ -63,12 +63,12 @@ cbcm
 
 Or manually:
 ```bash
-ssvncviewer -scale auto fedora.local:5900
+ssvncviewer -scale auto host.local:5900
 ```
 
 Fallback if hostname fails:
 ```bash
-ssvncviewer -scale auto 192.168.8.116:5900
+ssvncviewer -scale auto YOUR_HOST_IP:5900
 ```
 
 Reply here when connected!

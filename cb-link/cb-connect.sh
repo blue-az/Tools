@@ -2,7 +2,7 @@
 # cb-connect.sh - Connect to cb-link server from Chromebook
 
 # Use hostname.local (works across networks)
-SERVER_HOST="${CB_LINK_HOST:-fedora.local}"
+SERVER_HOST="${CB_LINK_HOST:-host.local}"
 PORT="${CB_LINK_PORT:-5900}"
 COMMAND="connect"
 

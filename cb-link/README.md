@@ -11,7 +11,7 @@ Use Chromebook (Debian) as a display for Fedora/Sway hosts (Z13 or Desktop) over
 
 ## Quick Start
 
-Cheatsheet: `cb-link-cheatsheet.txt` (USB copy lives at `/run/media/blueaz/F1E0-14F6/cb-link-cheatsheet.txt`).
+Cheatsheet: `cb-link-cheatsheet.txt` (optional USB copy path: `/run/media/<user>/<LABEL>/cb-link-cheatsheet.txt`).
 
 ### Extend Mode (2nd screen)
 ```bash
@@ -99,19 +99,19 @@ cbcs             # Status
 
 ### Manual Connection
 ```bash
-vncviewer fedora.local:5900           # Extend mode
-ssvncviewer -scale auto fedora.local:5900  # Mirror mode (scaled)
+vncviewer host.local:5900           # Extend mode
+ssvncviewer -scale auto host.local:5900  # Mirror mode (scaled)
 ```
 
 ### Desktop Target (override host)
 ```bash
-CB_LINK_HOST=desktop.local cbv
-CB_LINK_HOST=desktop.local cbcm
+CB_LINK_HOST=host.local cbv
+CB_LINK_HOST=host.local cbcm
 ```
 Or:
 ```bash
-./cb-connect.sh --host desktop.local
-./cb-connect.sh m --host desktop.local
+./cb-connect.sh --host host.local
+./cb-connect.sh m --host host.local
 ```
 
 ### Tablet (Android over USB, no WiFi)
@@ -147,8 +147,8 @@ Uses mDNS/Avahi hostnames - works across any network (home WiFi, phone hotspot, 
 
 | Device | Hostname | Resolution |
 |--------|----------|------------|
-| Z13 AMD | `fedora.local` | 2560x1600 (eDP-1) |
-| Desktop | `desktop.local` | 2560x1440 (DP-2) |
+| Example host A | `host.local` | 2560x1600 (eDP-1) |
+| Example host B | `host2.local` | 2560x1440 (DP-2) |
 | Chromebook | `<cb-hostname>.local` | 1600x1066 effective |
 | HEADLESS-1 | - | 1600x1066 (VNC output) |
 

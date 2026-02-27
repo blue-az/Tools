@@ -37,7 +37,7 @@ Interactive web page showing office setup with hoverable hotspots revealing devi
 ## Deployment
 
 ```bash
-cd /home/blueaz/Public/Proto
+cd /path/to/deploy/root
 ./deploy.sh device-map
 ```
 

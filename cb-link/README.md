@@ -96,6 +96,13 @@ cbcs             # Status
 ./cb-connect.sh d            # Disconnect
 ./cb-connect.sh s            # Status
 ```
+By default, the client auto-discovers a reachable host from:
+`fedora.local desktop.local 127.0.0.1`
+
+Override candidates:
+```bash
+CB_LINK_HOSTS="desktop.local fedora.local 192.168.x.x" cbv
+```
 
 ### Manual Connection
 ```bash
@@ -105,13 +112,13 @@ ssvncviewer -scale auto host.local:5900  # Mirror mode (scaled)
 
 ### Desktop Target (override host)
 ```bash
-CB_LINK_HOST=host.local cbv
-CB_LINK_HOST=host.local cbcm
+CB_LINK_HOST=desktop.local cbv
+CB_LINK_HOST=desktop.local cbcm
 ```
 Or:
 ```bash
-./cb-connect.sh --host host.local
-./cb-connect.sh m --host host.local
+./cb-connect.sh --host desktop.local
+./cb-connect.sh m --host desktop.local
 ```
 
 ### Tablet (Android over USB, no WiFi)

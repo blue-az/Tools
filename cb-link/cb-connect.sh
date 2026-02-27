@@ -1,16 +1,19 @@
 #!/bin/bash
 # cb-connect.sh - Connect to cb-link server from Chromebook
 
-# Use hostname.local (works across networks)
-SERVER_HOST="${CB_LINK_HOST:-host.local}"
+# Prefer explicit host. Otherwise auto-discover from candidate list.
+SERVER_HOST="${CB_LINK_HOST:-}"
 PORT="${CB_LINK_PORT:-5900}"
 COMMAND="connect"
+HOST_EXPLICIT=0
+AUTO_HOST_CANDIDATES="${CB_LINK_HOSTS:-fedora.local desktop.local 127.0.0.1}"
 
 parse_args() {
     while [ $# -gt 0 ]; do
         case "$1" in
             --host|-h)
                 SERVER_HOST="$2"
+                HOST_EXPLICIT=1
                 shift 2
                 ;;
             --port|-p)
@@ -24,6 +27,7 @@ parse_args() {
             *)
                 if [[ "$1" == *.* || "$1" == *:* ]]; then
                     SERVER_HOST="$1"
+                    HOST_EXPLICIT=1
                     shift 1
                 else
                     echo "Unknown arg: $1"
@@ -36,9 +40,30 @@ parse_args() {
 
 parse_args "$@"
 
-TARGET="$SERVER_HOST"
+resolve_target() {
+    if [ "$HOST_EXPLICIT" -eq 1 ] && [ -n "$SERVER_HOST" ]; then
+        TARGET="$SERVER_HOST"
+        return
+    fi
+
+    # Try hosts in order and pick first one with an open VNC port.
+    for h in $AUTO_HOST_CANDIDATES; do
+        if command -v nc >/dev/null 2>&1; then
+            if nc -z -w 1 "$h" "$PORT" >/dev/null 2>&1; then
+                TARGET="$h"
+                return
+            fi
+        fi
+    done
+
+    # Fall back to first candidate even if port check unavailable/fails.
+    TARGET=$(echo "$AUTO_HOST_CANDIDATES" | awk '{print $1}')
+}
+
+resolve_target
 
 show_status() {
+    resolve_target
     if pgrep -a vncviewer 2>/dev/null | grep -v grep; then
         echo "Status: CONNECTED"
     elif pgrep -a ssvncviewer 2>/dev/null | grep -v grep; then
@@ -50,6 +75,7 @@ show_status() {
 }
 
 connect() {
+    resolve_target
     pkill vncviewer 2>/dev/null
     sleep 0.5
     echo "Connecting to $TARGET:$PORT..."
@@ -58,6 +84,7 @@ connect() {
 }
 
 connect_fullscreen() {
+    resolve_target
     pkill vncviewer 2>/dev/null
     sleep 0.5
     echo "Connecting fullscreen to $TARGET:$PORT..."
@@ -66,6 +93,7 @@ connect_fullscreen() {
 }
 
 connect_scaled() {
+    resolve_target
     pkill vncviewer 2>/dev/null
     pkill ssvncviewer 2>/dev/null
     sleep 0.5
@@ -75,6 +103,7 @@ connect_scaled() {
 }
 
 connect_mirror_fullscreen() {
+    resolve_target
     pkill vncviewer 2>/dev/null
     pkill ssvncviewer 2>/dev/null
     sleep 0.5
@@ -84,6 +113,7 @@ connect_mirror_fullscreen() {
 }
 
 connect_fast() {
+    resolve_target
     pkill vncviewer 2>/dev/null
     sleep 0.5
     echo "Connecting (low color) to $TARGET:$PORT..."
@@ -139,5 +169,6 @@ case "$COMMAND" in
         echo "Options:"
         echo "  --host <hostname.local>   Override server (or set CB_LINK_HOST)"
         echo "  --port <port>             Override port (or set CB_LINK_PORT)"
+        echo "  CB_LINK_HOSTS             Space-separated auto-discovery hosts"
         ;;
 esac

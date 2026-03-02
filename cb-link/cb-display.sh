@@ -40,11 +40,6 @@ get_output_resolution() {
     swaymsg -t get_outputs | jq -r --arg output "$output" '.[] | select(.name==$output) | .current_mode | "\(.width)x\(.height)"' | head -1
 }
 
-get_output_transform() {
-    local output=$1
-    swaymsg -t get_outputs | jq -r --arg output "$output" '.[] | select(.name==$output) | .transform' | head -1
-}
-
 get_non_headless_count() {
     swaymsg -t get_outputs | jq -r '[.[] | select(.name | startswith("HEADLESS-") | not)] | length'
 }
@@ -140,10 +135,8 @@ start_mirror() {
     local output_count
     local mirror_res
     local mirror_backend
-    local transform
     source_output=$(get_source_output)
     native_res=$(get_output_resolution "$source_output")
-    transform=$(get_output_transform "$source_output")
     output_count=$(get_non_headless_count)
     if [ -z "$source_output" ]; then
         echo "ERROR: No active output found"
@@ -154,12 +147,7 @@ start_mirror() {
     elif is_desktop_host; then
         mirror_res="1680x1050"
     else
-        # Swap dimensions for 90/270 rotations so HEADLESS-1 matches the logical orientation
-        if [[ "$transform" == "90" || "$transform" == "270" ]]; then
-            mirror_res=$(echo "$native_res" | awk -F'x' '{print $2"x"$1}')
-        else
-            mirror_res="$native_res"
-        fi
+        mirror_res="$native_res"
     fi
     if [ -n "$CB_LINK_MIRROR_BACKEND" ]; then
         mirror_backend="$CB_LINK_MIRROR_BACKEND"
@@ -167,11 +155,6 @@ start_mirror() {
         mirror_backend="screencopy"
     else
         mirror_backend="screencopy-dmabuf"
-    fi
-    # screencopy-dmabuf captures raw GPU buffers without applying output transforms;
-    # fall back to screencopy when the source is rotated
-    if [[ "$transform" != "normal" && "$mirror_backend" == "screencopy-dmabuf" ]]; then
-        mirror_backend="screencopy"
     fi
 
     # Stop any existing

@@ -80,7 +80,8 @@ connect() {
     sleep 0.5
     echo "Connecting to $TARGET:$PORT..."
     vncviewer "$TARGET:$PORT" &
-    echo "Press F8 in viewer for menu (fullscreen, etc.)"
+    echo "Windowed TigerVNC only: DO NOT use Mod+F fullscreen (can gray-screen mirror mode)"
+    echo "For fullscreen use: cb-connect.sh f   (or alias: cbcf)"
 }
 
 connect_fullscreen() {

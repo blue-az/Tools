@@ -5,7 +5,7 @@ WORKFLOW (AMD HOST / FEDORA)
 ----------------------------
 1. Host: cbe (extend) or cbm (mirror)
 2. Client:
-   - Chromebook (WiFi): cbv (windowed) or cbcm (scaled/fullscreen)
+   - Chromebook (WiFi): cbv (windowed only; no Mod+F) or cbcm (scaled/fullscreen)
    - Tablet (WiFi): use VNC app to connect to host (host.local:5900 or IP)
    - Tablet (USB): cbmr (mirror + tablet) or cbt (tablet viewer only)
 3. Host: cbs (stop server)

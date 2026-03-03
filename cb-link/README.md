@@ -19,7 +19,7 @@ Cheatsheet: `cb-link-cheatsheet.txt` (optional USB copy path: `/run/media/<user>
 cbe              # Start extend mode
 
 # On CB:
-cbv              # Launch viewer (or cbcf for fullscreen)
+cbv              # Launch viewer (windowed only; use cbcf for fullscreen)
 ```
 
 ### Mirror Mode (clone screen)
@@ -79,7 +79,7 @@ sudo firewall-cmd --add-port=5900/tcp
 
 ### Aliases (in ~/.bash_aliases)
 ```bash
-cbv              # Quick viewer launch (windowed)
+cbv              # Quick viewer launch (windowed only; avoid Mod+F)
 cbc              # Connect to host (same as cbv)
 cbcf             # Safe fullscreen (ssvnc; avoids TigerVNC resize issue)
 cbcm             # Mirror mode connect (auto-scaled via ssvnc)

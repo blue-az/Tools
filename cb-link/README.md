@@ -60,6 +60,17 @@ alias cbt="~/Tools/cb-link/cb-tablet.sh"
 alias cbts="~/Tools/cb-link/cb-tablet.sh stop"
 ```
 
+Version-controlled alias template:
+```bash
+cp ~/Tools/cb-link/examples/bash_aliases.host ~/.bash_aliases
+source ~/.bash_aliases
+```
+
+Optional version-controlled Sway keybinds (includes `mod+p` mirror):
+```bash
+echo 'include ~/Tools/cb-link/examples/sway-bindings.host.conf' >> ~/.config/sway/config
+```
+
 ### Script Commands
 ```bash
 ./cb-display.sh extend   # 2nd screen mode
@@ -85,6 +96,12 @@ cbcf             # Safe fullscreen (ssvnc; avoids TigerVNC resize issue)
 cbcm             # Mirror mode connect (auto-scaled via ssvnc)
 cbcd             # Disconnect
 cbcs             # Status
+```
+
+Version-controlled Debian CB alias template:
+```bash
+cp ~/Tools/cb-link/examples/bash_aliases.cb-debian ~/.bash_aliases
+source ~/.bash_aliases
 ```
 
 ### Script Commands
@@ -202,3 +219,6 @@ CB_LINK_OUTPUT=DP-3
 - `cb-share.sh` - CB: Share CB screen to host (reverse mode)
 - `cb-tablet.sh` - Host: ADB reverse to tablet VNC viewer
 - `cb-status.md` - Development/communication log
+- `examples/bash_aliases.host` - Host alias template (tracked in git)
+- `examples/bash_aliases.cb-debian` - Debian CB alias template (tracked in git)
+- `examples/sway-bindings.host.conf` - Host Sway keybind template (tracked in git)

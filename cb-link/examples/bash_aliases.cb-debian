@@ -1,0 +1,16 @@
+# cb-link client aliases (Debian Chromebook)
+# Copy into: ~/.bash_aliases
+
+alias cbc="$HOME/Tools/cb-link/cb-connect.sh connect"
+alias cbv="$HOME/Tools/cb-link/cb-connect.sh connect"
+
+# Safe fullscreen path (ssvnc); preferred over TigerVNC fullscreen
+alias cbcf="$HOME/Tools/cb-link/cb-connect.sh fullscreen"
+alias cbcm="$HOME/Tools/cb-link/cb-connect.sh mirror"
+alias cbmf="$HOME/Tools/cb-link/cb-connect.sh mirror-full"
+
+# TigerVNC fullscreen legacy path (can gray-screen in mirror mode)
+alias cbtf="$HOME/Tools/cb-link/cb-connect.sh tigervnc-full"
+
+alias cbcd="$HOME/Tools/cb-link/cb-connect.sh disconnect"
+alias cbcs="$HOME/Tools/cb-link/cb-connect.sh status"

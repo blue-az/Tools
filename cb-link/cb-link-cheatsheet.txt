@@ -5,7 +5,7 @@ WORKFLOW (AMD HOST / FEDORA)
 ----------------------------
 1. Host: cbe (extend) or cbm (mirror)
 2. Client:
-   - Chromebook (WiFi): cbc/cbv (windowed) or cbcf (fullscreen)
+   - Chromebook (WiFi): cbv (windowed) or cbcm (scaled/fullscreen)
    - Tablet (WiFi): use VNC app to connect to host (host.local:5900 or IP)
    - Tablet (USB): cbmr (mirror + tablet) or cbt (tablet viewer only)
 3. Host: cbs (stop server)
@@ -19,9 +19,16 @@ CB:   cbcf (fullscreen)
 MIRROR MODE (VIEW-ONLY CLONE)
 -----------------------------
 Host: cbm
-CB:   cbcm (auto-scaled)
-CB:   cbc / cbv (windowed)
-CB:   cbcf (fullscreen)
+CB:   cbcm (auto-scaled, recommended - scales to fit CB screen)
+CB:   cbv  (windowed TigerVNC)
+NOTE: cbcf and TigerVNC in-app fullscreen (mod+f) trigger a resize
+      request that wayvnc rejects, causing gray screen. Use cbcm instead.
+
+SCREEN ROTATION (HOST)
+----------------------
+Host: mod+o  - cycle eDP-1 through 0/90/180/270
+After rotating: re-run cbm, then reconnect with cbcm
+wl-mirror loses source on transform change; no auto-recovery yet.
 
 TABLET (USB ADB REVERSE)
 ------------------------

@@ -40,6 +40,36 @@ get_output_resolution() {
     swaymsg -t get_outputs | jq -r --arg output "$output" '.[] | select(.name==$output) | .current_mode | "\(.width)x\(.height)"' | head -1
 }
 
+get_output_transform() {
+    local output=$1
+    swaymsg -t get_outputs | jq -r --arg output "$output" '.[] | select(.name==$output) | .transform // "normal"' | head -1
+}
+
+is_rotated_transform() {
+    case "$1" in
+        90|270|flipped-90|flipped-270)
+            return 0
+            ;;
+        *)
+            return 1
+            ;;
+    esac
+}
+
+swap_resolution_dims() {
+    local res=$1
+    local w
+    local h
+    if [[ "$res" =~ ^[0-9]+x[0-9]+$ ]]; then
+        w=${res%x*}
+        h=${res#*x}
+        echo "${h}x${w}"
+        return 0
+    fi
+    echo "$res"
+    return 1
+}
+
 get_non_headless_count() {
     swaymsg -t get_outputs | jq -r '[.[] | select(.name | startswith("HEADLESS-") | not)] | length'
 }
@@ -135,8 +165,11 @@ start_mirror() {
     local output_count
     local mirror_res
     local mirror_backend
+    local transform
+    local mirror_res_auto=0
     source_output=$(get_source_output)
     native_res=$(get_output_resolution "$source_output")
+    transform=$(get_output_transform "$source_output")
     output_count=$(get_non_headless_count)
     if [ -z "$source_output" ]; then
         echo "ERROR: No active output found"
@@ -146,8 +179,10 @@ start_mirror() {
         mirror_res="$CB_LINK_MIRROR_RES"
     elif is_desktop_host; then
         mirror_res="1680x1050"
+        mirror_res_auto=1
     else
         mirror_res="$native_res"
+        mirror_res_auto=1
     fi
     if [ -n "$CB_LINK_MIRROR_BACKEND" ]; then
         mirror_backend="$CB_LINK_MIRROR_BACKEND"
@@ -155,6 +190,16 @@ start_mirror() {
         mirror_backend="screencopy"
     else
         mirror_backend="screencopy-dmabuf"
+    fi
+    # On rotated source outputs, dmabuf can capture pre-transform buffers.
+    # Use screencopy so compositor-applied rotation is reflected in mirror stream.
+    if is_rotated_transform "$transform" && [ -z "$CB_LINK_MIRROR_BACKEND" ]; then
+        mirror_backend="screencopy"
+    fi
+    # Only auto-swap dimensions for auto-selected resolutions.
+    # User-provided CB_LINK_MIRROR_RES remains authoritative.
+    if is_rotated_transform "$transform" && [ "$mirror_res_auto" -eq 1 ]; then
+        mirror_res=$(swap_resolution_dims "$mirror_res")
     fi
 
     # Stop any existing
@@ -214,7 +259,7 @@ start_mirror() {
     if pgrep wayvnc >/dev/null && pgrep wl-mirror >/dev/null; then
         echo ""
         echo "MIRROR mode started (VIEW-ONLY)"
-        echo "  $source_output @ $native_res -> wl-mirror -> HEADLESS-1 @ $mirror_res"
+        echo "  $source_output @ $native_res (transform=$transform) -> wl-mirror[$mirror_backend] -> HEADLESS-1 @ $mirror_res"
         echo "  Control from host only"
         echo ""
         show_connect_info

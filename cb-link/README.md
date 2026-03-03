@@ -81,7 +81,7 @@ sudo firewall-cmd --add-port=5900/tcp
 ```bash
 cbv              # Quick viewer launch (windowed)
 cbc              # Connect to host (same as cbv)
-cbcf             # Fullscreen connect (F8 to exit)
+cbcf             # Safe fullscreen (ssvnc; avoids TigerVNC resize issue)
 cbcm             # Mirror mode connect (auto-scaled via ssvnc)
 cbcd             # Disconnect
 cbcs             # Status
@@ -90,7 +90,8 @@ cbcs             # Status
 ### Script Commands
 ```bash
 ./cb-connect.sh              # Connect windowed
-./cb-connect.sh f            # Connect fullscreen
+./cb-connect.sh f            # Safe fullscreen (ssvnc scaled)
+./cb-connect.sh tf           # TigerVNC fullscreen (legacy)
 ./cb-connect.sh m            # Mirror mode (ssvnc auto-scaled)
 ./cb-connect.sh mf           # Mirror fullscreen
 ./cb-connect.sh d            # Disconnect
@@ -109,6 +110,10 @@ CB_LINK_HOSTS="desktop.local fedora.local 192.168.x.x" cbv
 vncviewer host.local:5900           # Extend mode
 ssvncviewer -scale auto host.local:5900  # Mirror mode (scaled)
 ```
+
+TigerVNC fullscreen (`./cb-connect.sh tf` or in-app fullscreen) can trigger
+remote resize behavior that causes gray screens in mirror mode; prefer `cbcf`
+or `cbcm`.
 
 ### Desktop Target (override host)
 ```bash

@@ -20,7 +20,7 @@ parse_args() {
                 PORT="$2"
                 shift 2
                 ;;
-            connect|c|fullscreen|full|f|mirror|m|mf|mirror-full|fast|low|disconnect|stop|d|status|s)
+            connect|c|fullscreen|full|f|tigervnc-full|tf|mirror|m|mf|mirror-full|fast|low|disconnect|stop|d|status|s)
                 COMMAND="$1"
                 shift 1
                 ;;
@@ -86,10 +86,21 @@ connect() {
 connect_fullscreen() {
     resolve_target
     pkill vncviewer 2>/dev/null
+    pkill ssvncviewer 2>/dev/null
     sleep 0.5
-    echo "Connecting fullscreen to $TARGET:$PORT..."
+    echo "Connecting safe fullscreen to $TARGET:$PORT..."
+    ssvncviewer -scale auto -fullscreen "$TARGET:$PORT" &
+    echo "Fullscreen via ssvnc (avoids TigerVNC remote-resize gray screen)"
+}
+
+connect_tigervnc_fullscreen() {
+    resolve_target
+    pkill vncviewer 2>/dev/null
+    pkill ssvncviewer 2>/dev/null
+    sleep 0.5
+    echo "Connecting TigerVNC fullscreen to $TARGET:$PORT..."
     vncviewer -FullScreen "$TARGET:$PORT" &
-    echo "Press F8 to exit fullscreen"
+    echo "Use only if needed; can gray-screen in mirror mode"
 }
 
 connect_scaled() {
@@ -134,6 +145,9 @@ case "$COMMAND" in
     fullscreen|full|f)
         connect_fullscreen
         ;;
+    tigervnc-full|tf)
+        connect_tigervnc_fullscreen
+        ;;
     mirror|m)
         connect_scaled
         ;;
@@ -154,7 +168,8 @@ case "$COMMAND" in
         echo ""
         echo "Extend mode (HEADLESS-1, 2nd screen):"
         echo "  connect (c)     - Connect windowed"
-        echo "  fullscreen (f)  - Connect fullscreen"
+        echo "  fullscreen (f)  - Safe fullscreen (ssvnc scaled)"
+        echo "  tigervnc-full   - TigerVNC fullscreen (legacy)"
         echo "  fast            - Low color (faster)"
         echo ""
         echo "Mirror mode (source output clone, ssvnc scaled):"

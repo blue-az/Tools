@@ -14,15 +14,17 @@ EXTEND MODE (2ND SCREEN)
 -----------------------
 Host: cbe
 CB:   cbc / cbv (windowed)
-CB:   cbcf (fullscreen)
+CB:   cbcf (safe fullscreen via ssvnc)
+CB:   cbtf (TigerVNC fullscreen legacy)
 
 MIRROR MODE (VIEW-ONLY CLONE)
 -----------------------------
 Host: cbm
 CB:   cbcm (auto-scaled, recommended - scales to fit CB screen)
+CB:   cbcf (safe fullscreen via ssvnc)
 CB:   cbv  (windowed TigerVNC)
-NOTE: cbcf and TigerVNC in-app fullscreen (mod+f) trigger a resize
-      request that wayvnc rejects, causing gray screen. Use cbcm instead.
+NOTE: TigerVNC fullscreen (cbtf or in-app mod+f) can trigger resize
+      requests that cause gray screen in mirror mode. Prefer cbcf/cbcm.
 
 SCREEN ROTATION (HOST)
 ----------------------

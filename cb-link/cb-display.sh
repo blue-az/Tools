@@ -233,7 +233,8 @@ start_mirror() {
 
     # Start wl-mirror FIRST (it should be only thing on HEADLESS-1)
     # Default backend is host-specific; override with CB_LINK_MIRROR_BACKEND if needed.
-    wl-mirror --backend "$mirror_backend" --fullscreen-output HEADLESS-1 --scaling fit "$source_output" &
+    # NO_AT_BRIDGE=1 suppresses harmless AT-SPI accessibility bus warnings (GTK3).
+    NO_AT_BRIDGE=1 wl-mirror --backend "$mirror_backend" --fullscreen-output HEADLESS-1 --scaling fit "$source_output" &
     sleep 0.5
 
     # Force focus back to the source output
@@ -253,6 +254,8 @@ start_mirror() {
     ) &
 
     # Stream HEADLESS-1 via VNC (no --render-cursor, wl-mirror captures cursor)
+    # Remove stale control socket to suppress wayvnc's "Deleting stale..." warning.
+    rm -f "${XDG_RUNTIME_DIR:-/run/user/$UID}/wayvncctl"
     wayvnc --output HEADLESS-1 0.0.0.0 $PORT &
     sleep 0.5
 

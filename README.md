@@ -8,6 +8,7 @@ Collection of utility tools.
 |------|-------------|
 | [cb-link](cb-link/) | Use Chromebook as a wireless display for Fedora/Sway hosts via VNC |
 | [device-map](device-map/) | Interactive web map of office devices with specs from dotfiles |
+| [gpu-monitor](gpu-monitor/) | Monitor, record, and graph GPU usage (NVIDIA/ROCm) |
 
 ## cb-link
 

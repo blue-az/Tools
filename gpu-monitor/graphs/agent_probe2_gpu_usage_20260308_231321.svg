@@ -1,0 +1,58 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1280" height="900" viewBox="0 0 1280 900">
+<rect width="100%" height="100%" fill="#f8fafc"/>
+<text x="30" y="36" font-size="24" font-family="monospace" fill="#0f172a">GPU Usage Report</text>
+<text x="30" y="58" font-size="14" font-family="monospace" fill="#334155">Generated 2026-03-08T23:13:30</text>
+<circle cx="30" cy="878" r="5" fill="#0b7285"/>
+<text x="40" y="883" font-size="13" font-family="monospace" fill="#0f172a">GPU 0</text>
+<rect x="70" y="70" width="1180" height="220" fill="#ffffff" stroke="#cbd5e1"/>
+<text x="70" y="60" font-size="16" font-family="monospace" fill="#0f172a">GPU Util (%)</text>
+<line x1="70" y1="290.00" x2="1250" y2="290.00" stroke="#e2e8f0"/>
+<text x="62" y="294.00" text-anchor="end" font-size="11" font-family="monospace" fill="#475569">0.0</text>
+<line x1="70" y1="246.00" x2="1250" y2="246.00" stroke="#e2e8f0"/>
+<text x="62" y="250.00" text-anchor="end" font-size="11" font-family="monospace" fill="#475569">20.0</text>
+<line x1="70" y1="202.00" x2="1250" y2="202.00" stroke="#e2e8f0"/>
+<text x="62" y="206.00" text-anchor="end" font-size="11" font-family="monospace" fill="#475569">40.0</text>
+<line x1="70" y1="158.00" x2="1250" y2="158.00" stroke="#e2e8f0"/>
+<text x="62" y="162.00" text-anchor="end" font-size="11" font-family="monospace" fill="#475569">60.0</text>
+<line x1="70" y1="114.00" x2="1250" y2="114.00" stroke="#e2e8f0"/>
+<text x="62" y="118.00" text-anchor="end" font-size="11" font-family="monospace" fill="#475569">80.0</text>
+<line x1="70" y1="70.00" x2="1250" y2="70.00" stroke="#e2e8f0"/>
+<text x="62" y="74.00" text-anchor="end" font-size="11" font-family="monospace" fill="#475569">100.0</text>
+<path d="M 70.00 147.90 L 201.13 158.25 L 332.25 179.83 L 463.38 192.84 L 594.50 197.31 L 725.76 196.75 L 856.75 208.40 L 987.88 218.24 L 1118.87 231.80 L 1250.00 247.47" fill="none" stroke="#0b7285" stroke-width="2.2"/>
+<text x="70" y="308" font-size="11" font-family="monospace" fill="#475569">23:13:21</text>
+<text x="1250" y="308" text-anchor="end" font-size="11" font-family="monospace" fill="#475569">23:13:30</text>
+<rect x="70" y="330" width="1180" height="220" fill="#ffffff" stroke="#cbd5e1"/>
+<text x="70" y="320" font-size="16" font-family="monospace" fill="#0f172a">Temp (C)</text>
+<line x1="70" y1="550.00" x2="1250" y2="550.00" stroke="#e2e8f0"/>
+<text x="62" y="554.00" text-anchor="end" font-size="11" font-family="monospace" fill="#475569">53.1</text>
+<line x1="70" y1="506.00" x2="1250" y2="506.00" stroke="#e2e8f0"/>
+<text x="62" y="510.00" text-anchor="end" font-size="11" font-family="monospace" fill="#475569">57.1</text>
+<line x1="70" y1="462.00" x2="1250" y2="462.00" stroke="#e2e8f0"/>
+<text x="62" y="466.00" text-anchor="end" font-size="11" font-family="monospace" fill="#475569">61.0</text>
+<line x1="70" y1="418.00" x2="1250" y2="418.00" stroke="#e2e8f0"/>
+<text x="62" y="422.00" text-anchor="end" font-size="11" font-family="monospace" fill="#475569">64.9</text>
+<line x1="70" y1="374.00" x2="1250" y2="374.00" stroke="#e2e8f0"/>
+<text x="62" y="378.00" text-anchor="end" font-size="11" font-family="monospace" fill="#475569">68.8</text>
+<line x1="70" y1="330.00" x2="1250" y2="330.00" stroke="#e2e8f0"/>
+<text x="62" y="334.00" text-anchor="end" font-size="11" font-family="monospace" fill="#475569">72.8</text>
+<path d="M 70.00 348.33 L 201.13 369.78 L 332.25 432.86 L 463.38 450.97 L 594.50 425.64 L 725.76 461.11 L 856.75 443.43 L 987.88 473.38 L 1118.87 518.68 L 1250.00 531.67" fill="none" stroke="#0b7285" stroke-width="2.2"/>
+<text x="70" y="568" font-size="11" font-family="monospace" fill="#475569">23:13:21</text>
+<text x="1250" y="568" text-anchor="end" font-size="11" font-family="monospace" fill="#475569">23:13:30</text>
+<rect x="70" y="590" width="1180" height="220" fill="#ffffff" stroke="#cbd5e1"/>
+<text x="70" y="580" font-size="16" font-family="monospace" fill="#0f172a">Power (W)</text>
+<line x1="70" y1="810.00" x2="1250" y2="810.00" stroke="#e2e8f0"/>
+<text x="62" y="814.00" text-anchor="end" font-size="11" font-family="monospace" fill="#475569">90.2</text>
+<line x1="70" y1="766.00" x2="1250" y2="766.00" stroke="#e2e8f0"/>
+<text x="62" y="770.00" text-anchor="end" font-size="11" font-family="monospace" fill="#475569">117.1</text>
+<line x1="70" y1="722.00" x2="1250" y2="722.00" stroke="#e2e8f0"/>
+<text x="62" y="726.00" text-anchor="end" font-size="11" font-family="monospace" fill="#475569">144.0</text>
+<line x1="70" y1="678.00" x2="1250" y2="678.00" stroke="#e2e8f0"/>
+<text x="62" y="682.00" text-anchor="end" font-size="11" font-family="monospace" fill="#475569">170.9</text>
+<line x1="70" y1="634.00" x2="1250" y2="634.00" stroke="#e2e8f0"/>
+<text x="62" y="638.00" text-anchor="end" font-size="11" font-family="monospace" fill="#475569">197.8</text>
+<line x1="70" y1="590.00" x2="1250" y2="590.00" stroke="#e2e8f0"/>
+<text x="62" y="594.00" text-anchor="end" font-size="11" font-family="monospace" fill="#475569">224.7</text>
+<path d="M 70.00 608.33 L 201.13 645.48 L 332.25 686.18 L 463.38 690.22 L 594.50 713.31 L 725.76 697.33 L 856.75 726.63 L 987.88 721.93 L 1118.87 763.99 L 1250.00 791.67" fill="none" stroke="#0b7285" stroke-width="2.2"/>
+<text x="70" y="828" font-size="11" font-family="monospace" fill="#475569">23:13:21</text>
+<text x="1250" y="828" text-anchor="end" font-size="11" font-family="monospace" fill="#475569">23:13:30</text>
+</svg>

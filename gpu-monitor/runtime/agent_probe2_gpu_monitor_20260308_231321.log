@@ -1,0 +1,23 @@
+Using backend: demo
+Session label: agent_probe2
+Session note: agent gather test 2
+Logging to: /home/blueaz/Tools/gpu-monitor/logs/agent_probe2_gpu_usage_20260308_231321.csv
+Press Ctrl+C to stop.
+
+[2026-03-08T23:13:21] gpu=0  util=64.6% mem=46.6% temp=71.1C power=213.5W
+[2026-03-08T23:13:22] gpu=0  cpu=7.1% util=59.9% mem=38.4% temp=69.2C power=190.8W
+[2026-03-08T23:13:23] gpu=0  cpu=3.4% util=50.1% mem=32.4% temp=63.6C power=165.9W
+[2026-03-08T23:13:24] gpu=0  cpu=7.6% util=44.2% mem=34.2% temp=62.0C power=163.5W
+[2026-03-08T23:13:25] gpu=0  cpu=4.3% util=42.1% mem=28.0% temp=64.2C power=149.3W
+[2026-03-08T23:13:26] gpu=0  cpu=6.3% util=42.4% mem=32.1% temp=61.1C power=159.1W
+[2026-03-08T23:13:27] gpu=0  cpu=6.0% util=37.1% mem=23.0% temp=62.6C power=141.2W
+[2026-03-08T23:13:28] gpu=0  cpu=6.7% util=32.6% mem=26.6% temp=60.0C power=144.1W
+[2026-03-08T23:13:29] gpu=0  cpu=4.7% util=26.5% mem=16.7% temp=55.9C power=118.4W
+[2026-03-08T23:13:30] gpu=0  cpu=3.0% util=19.3% mem=8.9% temp=54.8C power=101.4W
+
+Stopped by user.
+
+Samples collected: 10
+Metadata JSON: /home/blueaz/Tools/gpu-monitor/logs/agent_probe2_gpu_usage_20260308_231321.json
+Graph SVG: /home/blueaz/Tools/gpu-monitor/graphs/agent_probe2_gpu_usage_20260308_231321.svg
+Graph HTML: /home/blueaz/Tools/gpu-monitor/graphs/agent_probe2_gpu_usage_20260308_231321.html

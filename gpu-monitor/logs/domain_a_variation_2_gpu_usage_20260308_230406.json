@@ -1,0 +1,20 @@
+{
+  "label": "domain_a_variation_2",
+  "label_slug": "domain_a_variation_2",
+  "note": "tools.py attempt 1",
+  "backend": "demo",
+  "interval_s": 1.0,
+  "start_epoch": 1773036246.928,
+  "end_epoch": 1773036247.929,
+  "start_iso": "2026-03-08T23:04:06",
+  "end_iso": "2026-03-08T23:04:07",
+  "duration_seconds": 1.0,
+  "samples": 2,
+  "artifacts": {
+    "csv": "/home/blueaz/Tools/gpu-monitor/logs/domain_a_variation_2_gpu_usage_20260308_230406.csv",
+    "svg": "/home/blueaz/Tools/gpu-monitor/graphs/domain_a_variation_2_gpu_usage_20260308_230406.svg",
+    "html": "/home/blueaz/Tools/gpu-monitor/graphs/domain_a_variation_2_gpu_usage_20260308_230406.html"
+  },
+  "build_log_snippet": "gpu_csv=/home/blueaz/Tools/gpu-monitor/logs/domain_a_variation_2_gpu_usage_20260308_230406.csv gpu_meta=/home/blueaz/Tools/gpu-monitor/logs/domain_a_variation_2_gpu_usage_20260308_230406.json",
+  "replay_command": "python3 gpu-monitor/gpu_monitor.py graph /home/blueaz/Tools/gpu-monitor/logs/domain_a_variation_2_gpu_usage_20260308_230406.csv"
+}

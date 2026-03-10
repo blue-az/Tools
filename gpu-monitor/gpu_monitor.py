@@ -655,6 +655,7 @@ def run_monitor(args: argparse.Namespace) -> int:
     start = time.time()
     samples = 0
     end = start
+    finalize_ok = True
     previous_sigterm = signal.getsignal(signal.SIGTERM)
 
     def handle_sigterm(signum: int, frame: Any) -> None:
@@ -700,8 +701,8 @@ def run_monitor(args: argparse.Namespace) -> int:
             print(f"Graph HTML: {html_path}")
         except Exception as exc:
             print(f"\nCould not generate graph: {exc}", file=sys.stderr)
-            return 1
-    return 0
+            finalize_ok = False
+    return 0 if finalize_ok else 1
 
 
 def start_monitor(args: argparse.Namespace) -> int:

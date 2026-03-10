@@ -142,7 +142,7 @@ INDEX_HTML = """<!doctype html>
     .foot { margin-top: 8px; font-size: 12px; color: var(--muted); }
   </style>
 </head>
-<body>
+<body data-theme="dark">
   <div class="wrap">
     <div class="top">
       <div>
@@ -171,9 +171,11 @@ INDEX_HTML = """<!doctype html>
     const chart = document.getElementById("chart");
     const ctx = chart.getContext("2d");
     const params = new URLSearchParams(window.location.search);
-    const theme = params.get("theme");
-    if (theme === "dark") {
+    const theme = (params.get("theme") || "dark").toLowerCase();
+    if (theme !== "light") {
       document.body.setAttribute("data-theme", "dark");
+    } else {
+      document.body.removeAttribute("data-theme");
     }
 
     document.getElementById("startBtn").addEventListener("click", async () => {

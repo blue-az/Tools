@@ -14,6 +14,7 @@ from pathlib import Path
 from typing import Any
 from urllib.parse import parse_qs, urlparse
 
+import gpu_health
 import gpu_monitor
 
 
@@ -151,6 +152,7 @@ INDEX_HTML = """<!doctype html>
       </div>
       <div class="bar">
         <span class="chip">Recording: <span id="recState" class="status-off">OFF</span></span>
+        <span class="chip">Health: <span id="healthState" class="status-off">-</span></span>
         <button class="start" id="startBtn">Start Recording</button>
         <button class="stop" id="stopBtn">Stop Recording</button>
       </div>
@@ -159,6 +161,7 @@ INDEX_HTML = """<!doctype html>
       <div class="cards" id="cards"></div>
       <canvas id="chart" width="1120" height="360"></canvas>
       <div class="foot" id="recordPath">No active recording file.</div>
+      <div class="foot" id="healthSummary">No live health summary yet.</div>
     </div>
   </div>
 
@@ -166,7 +169,9 @@ INDEX_HTML = """<!doctype html>
     const colors = ["#d97706","#2563eb","#059669","#7c3aed","#dc2626","#0891b2"];
     const cardsEl = document.getElementById("cards");
     const recState = document.getElementById("recState");
+    const healthState = document.getElementById("healthState");
     const recordPath = document.getElementById("recordPath");
+    const healthSummary = document.getElementById("healthSummary");
     const meta = document.getElementById("meta");
     const chart = document.getElementById("chart");
     const ctx = chart.getContext("2d");
@@ -298,6 +303,16 @@ INDEX_HTML = """<!doctype html>
       recState.textContent = on ? "ON" : "OFF";
       recState.className = on ? "status-on" : "status-off";
       recordPath.textContent = status.csv_path ? `Recording file: ${status.csv_path}` : "No active recording file.";
+      const health = status.health_summary || {};
+      const verdict = health.overall_status || "-";
+      healthState.textContent = verdict;
+      healthState.className = verdict === "FAIL" ? "status-off" : "status-on";
+      const parts = [];
+      (health.node_issues || []).forEach(issue => parts.push(`Node ${issue.status}: ${issue.message}`));
+      (health.gpu_summaries || []).forEach(gpu => {
+        (gpu.issues || []).forEach(issue => parts.push(`GPU ${gpu.gpu_index} ${issue.status}: ${issue.message}`));
+      });
+      healthSummary.textContent = parts.length ? parts.join(" | ") : "No active health warnings.";
     }
 
     async function init() {
@@ -321,12 +336,14 @@ class AppState:
         history_seconds: int,
         output_dir: Path,
         demo_gpus: int,
+        health_config: dict[str, Any],
     ) -> None:
         self.backend = backend
         self.interval_s = max(0.1, interval_s)
         self.history_seconds = max(30, history_seconds)
         self.output_dir = output_dir
         self.demo_gpus = demo_gpus
+        self.health_config = health_config
         self.max_points = int(self.history_seconds / self.interval_s) + 3
 
         self.latest: dict[str, dict[str, Any]] = {}
@@ -337,6 +354,7 @@ class AppState:
         self.csv_path: Path | None = None
         self.samples_written = 0
         self.last_error: str | None = None
+        self.health_summary: dict[str, Any] = {"overall_status": "SKIP"}
         self.lock = threading.Lock()
         self.stop_event = threading.Event()
 
@@ -367,6 +385,7 @@ class AppState:
                 "csv_path": str(self.csv_path) if self.csv_path else None,
                 "samples_written": self.samples_written,
                 "last_error": self.last_error,
+                "health_summary": self.health_summary,
             }
 
     def snapshot_data(self) -> dict[str, Any]:
@@ -384,6 +403,7 @@ class AppState:
                 "series": series_out,
                 "recording": self.recording,
                 "csv_path": str(self.csv_path) if self.csv_path else None,
+                "health_summary": self.health_summary,
             }
 
     def sampler_loop(self) -> None:
@@ -392,6 +412,17 @@ class AppState:
             try:
                 rows = gpu_monitor.collect_once(self.backend, now, self.demo_gpus)
                 cpu_util = gpu_monitor.collect_cpu_util_pct()
+                nvidia_health = {}
+                xid_events = []
+                if self.backend == "nvidia":
+                    gpu_indices = []
+                    for row in rows:
+                        try:
+                            gpu_indices.append(int(str(row.get("gpu_index", "0"))))
+                        except ValueError:
+                            continue
+                    nvidia_health = gpu_health.collect_nvidia_health(gpu_indices)
+                    xid_events = gpu_health.query_xid_events()
                 with self.lock:
                     self.last_error = None
                     self.cpu_latest = cpu_util
@@ -409,6 +440,13 @@ class AppState:
                     if self.recording and self.csv_path is not None:
                         gpu_monitor.write_csv(self.csv_path, rows)
                         self.samples_written += 1
+                    self.health_summary = gpu_health.summarize_latest_rows(
+                        rows,
+                        backend=self.backend,
+                        config=self.health_config,
+                        nvidia_health=nvidia_health,
+                        xid_events=xid_events,
+                    )
             except Exception as exc:
                 with self.lock:
                     self.last_error = str(exc)
@@ -477,6 +515,11 @@ def build_parser() -> argparse.ArgumentParser:
     parser.add_argument("--history", type=int, default=300, help="Live chart history window in seconds")
     parser.add_argument("--output-dir", default="gpu-monitor", help="Output root (logs/)")
     parser.add_argument("--demo-gpus", type=int, default=1, help="Synthetic GPU count for demo backend")
+    parser.add_argument(
+        "--health-config",
+        default=None,
+        help="Optional JSON file with threshold overrides for health evaluation",
+    )
     return parser
 
 
@@ -494,6 +537,16 @@ def main() -> int:
         history_seconds=args.history,
         output_dir=Path(args.output_dir).resolve(),
         demo_gpus=args.demo_gpus,
+        health_config=gpu_health.load_health_config(
+            args.health_config,
+            gpu_names=[
+                str(row.get("gpu_name", ""))
+                for row in gpu_monitor.collect_once(
+                    backend, time.time(), args.demo_gpus
+                )
+                if row.get("gpu_name")
+            ],
+        ),
     )
     thread = threading.Thread(target=state.sampler_loop, daemon=True)
     thread.start()

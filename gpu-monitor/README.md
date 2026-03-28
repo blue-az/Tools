@@ -10,6 +10,12 @@ Uses installed tools first:
 
 No Python packages are required beyond the standard library.
 
+The monitor now also emits a lightweight health verdict summary:
+- `PASS`, `WARN`, or `FAIL` at end of run
+- per-GPU threshold evaluation for temperature, VRAM headroom, and power baseline
+- NVIDIA-only supplemental checks for XID, throttle reasons, and ECC when `pynvml` is available
+- per-run summary stats including average/peak utilization, peak memory use, max temperature, and max power
+
 ## Web Dashboard (Live + Record Control)
 
 Start the local dashboard:
@@ -30,6 +36,7 @@ What you get:
 - Live CPU utilization card
 - Live GPU usage cards (utilization, memory, temperature, power)
 - Live utilization chart (GPU + CPU, rolling history)
+- Live health verdict and warning summary
 - `Start Recording` / `Stop Recording` buttons
 - Active CSV recording path shown in the UI
 
@@ -54,6 +61,46 @@ This creates:
 - `gpu-monitor/logs/gpu_usage_*.csv`
 - `gpu-monitor/graphs/gpu_usage_*.svg`
 - `gpu-monitor/graphs/gpu_usage_*.html`
+- `gpu-monitor/logs/gpu_usage_*.json`
+- `gpu-monitor/logs/gpu_usage_*.health.json`
+
+## Recommended Commands
+
+Interactive live dashboard:
+
+```bash
+python3 gpu-monitor/gpu_dashboard.py --backend nvidia
+```
+
+Record a real NVIDIA workload until you stop it:
+
+```bash
+python3 gpu-monitor/gpu_monitor.py run \
+  --backend nvidia \
+  --duration 0 \
+  --label my_job \
+  --health-config gpu-monitor/configs/nvidia_heavy_compute.json
+```
+
+Record a workstation-style session with more relaxed thresholds:
+
+```bash
+python3 gpu-monitor/gpu_monitor.py run \
+  --backend nvidia \
+  --duration 0 \
+  --label desktop_session \
+  --health-config gpu-monitor/configs/nvidia_workstation.json
+```
+
+Detached recorder for a background experiment:
+
+```bash
+python3 gpu-monitor/gpu_monitor.py start \
+  --backend nvidia \
+  --interval 1 \
+  --label overnight_run \
+  --health-config gpu-monitor/configs/nvidia_heavy_compute.json
+```
 
 ## Commands
 
@@ -72,6 +119,7 @@ Options:
 - `--label domain_variation_2`: include a stable label in filenames and metadata
 - `--note "attempt 1 build log entry"`: store a short experiment note in metadata JSON
 - `--demo-gpus 2`: number of synthetic GPUs in demo mode
+- `--health-config /path/thresholds.json`: override health thresholds with a JSON file
 
 Example for experiment attribution:
 
@@ -86,6 +134,7 @@ python3 gpu-monitor/gpu_monitor.py run \
 This produces a matched set of artifacts:
 - `gpu-monitor/logs/domain_a_variation_2_gpu_usage_*.csv`
 - `gpu-monitor/logs/domain_a_variation_2_gpu_usage_*.json`
+- `gpu-monitor/logs/domain_a_variation_2_gpu_usage_*.health.json`
 - `gpu-monitor/graphs/domain_a_variation_2_gpu_usage_*.svg`
 - `gpu-monitor/graphs/domain_a_variation_2_gpu_usage_*.html`
 
@@ -95,7 +144,32 @@ The JSON sidecar contains:
 - duration in seconds
 - backend and interval
 - artifact paths
+- embedded health summary
 - a build-log snippet you can paste into experiment notes
+
+The `.health.json` sidecar contains:
+- overall verdict
+- per-GPU metrics and issues
+- node-level XID findings when available
+- thresholds used for evaluation
+
+Included example configs:
+- `gpu-monitor/configs/nvidia_workstation.json`: relaxed thresholds for interactive desktop/workstation use
+- `gpu-monitor/configs/nvidia_heavy_compute.json`: stricter thresholds for long-running training/inference loads
+
+If you do not pass `--health-config`, gpu-monitor will also try to auto-load a
+model-specific config from `gpu-monitor/configs/models/` based on the detected
+GPU name. Explicit `--health-config` always wins.
+
+Example:
+
+```bash
+python3 gpu-monitor/gpu_monitor.py run \
+  --backend nvidia \
+  --duration 0 \
+  --label my_job \
+  --health-config gpu-monitor/configs/nvidia_heavy_compute.json
+```
 
 ### Detached recorder for agent use
 

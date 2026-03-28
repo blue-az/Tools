@@ -19,6 +19,8 @@ import time
 from pathlib import Path
 from typing import Any
 
+import gpu_health
+
 
 CSV_HEADERS = [
     "timestamp_iso",
@@ -79,6 +81,18 @@ def runtime_paths(output_dir: Path, label: str | None = None) -> tuple[Path, Pat
     stem = f"{prefix}gpu_monitor_{stamp}"
     runtime_dir = output_dir / "runtime"
     return runtime_dir / f"{stem}.pid", runtime_dir / f"{stem}.log"
+
+
+def read_log_tail(path: Path, max_lines: int = 20) -> list[str]:
+    try:
+        lines = path.read_text(encoding="utf-8").splitlines()
+    except OSError:
+        return []
+    return lines[-max_lines:] if max_lines > 0 else []
+
+
+def guess_log_path_from_pid(pid_path: Path) -> Path:
+    return pid_path.with_suffix(".log")
 
 
 def collect_cpu_util_pct() -> float | None:
@@ -589,6 +603,8 @@ def write_session_metadata(
     csv_path: Path,
     svg_path: Path,
     html_path: Path,
+    health_path: Path | None = None,
+    health_summary: dict[str, Any] | None = None,
 ) -> None:
     metadata_path.parent.mkdir(parents=True, exist_ok=True)
     payload = {
@@ -607,6 +623,7 @@ def write_session_metadata(
             "csv": str(csv_path),
             "svg": str(svg_path),
             "html": str(html_path),
+            "health": str(health_path) if health_path else None,
         },
         "build_log_snippet": f"gpu_csv={csv_path} gpu_meta={metadata_path}",
         "replay_command": " ".join(
@@ -618,6 +635,7 @@ def write_session_metadata(
                 str(csv_path),
             ]
         ),
+        "health_summary": health_summary,
     }
     metadata_path.write_text(json.dumps(payload, indent=2) + "\n", encoding="utf-8")
 
@@ -631,6 +649,11 @@ def add_shared_run_args(parser: argparse.ArgumentParser) -> None:
     parser.add_argument("--label", default=None, help="Session label used in filenames and metadata")
     parser.add_argument("--note", default=None, help="Short experiment/build note stored in metadata JSON")
     parser.add_argument("--demo-gpus", type=int, default=1, help="Number of synthetic GPUs for demo backend")
+    parser.add_argument(
+        "--health-config",
+        default=None,
+        help="Optional JSON file with threshold overrides for health evaluation",
+    )
 
 
 def run_monitor(args: argparse.Namespace) -> int:
@@ -642,13 +665,18 @@ def run_monitor(args: argparse.Namespace) -> int:
         svg_path = csv_path.with_name(f"{stem}.svg")
         html_path = csv_path.with_name(f"{stem}.html")
         metadata_path = csv_path.with_name(f"{stem}.json")
+    health_path = csv_path.with_name(f"{csv_path.stem}.health.json")
 
     backend = detect_backend(args.backend)
+    initial_rows = collect_once(backend, time.time(), demo_gpus=args.demo_gpus)
+    gpu_names = [str(row.get("gpu_name", "")) for row in initial_rows if row.get("gpu_name")]
+    health_config = gpu_health.load_health_config(args.health_config, gpu_names=gpu_names)
     print(f"Using backend: {backend}")
     if args.label:
         print(f"Session label: {args.label}")
     if args.note:
         print(f"Session note: {args.note}")
+    print(f"Health config: {health_config.get('_config_source', 'defaults')}")
     print(f"Logging to: {csv_path}")
     print("Press Ctrl+C to stop.\n")
 
@@ -682,6 +710,33 @@ def run_monitor(args: argparse.Namespace) -> int:
         signal.signal(signal.SIGTERM, previous_sigterm)
         try:
             generate_graph(csv_path, svg_path, html_path)
+            rows = read_csv(csv_path)
+            gpu_indices = []
+            for row in rows:
+                gpu = row.get("gpu_index")
+                if gpu is None:
+                    continue
+                try:
+                    gpu_indices.append(int(str(gpu)))
+                except ValueError:
+                    continue
+            nvidia_health = (
+                gpu_health.collect_nvidia_health(gpu_indices)
+                if backend == "nvidia"
+                else {}
+            )
+            xid_events = gpu_health.query_xid_events() if backend == "nvidia" else []
+            health_summary = gpu_health.summarize_rows(
+                rows,
+                backend=backend,
+                config=health_config,
+                nvidia_health=nvidia_health,
+                xid_events=xid_events,
+            )
+            health_path.write_text(
+                json.dumps(health_summary, indent=2) + "\n",
+                encoding="utf-8",
+            )
             write_session_metadata(
                 metadata_path,
                 label=args.label,
@@ -694,9 +749,34 @@ def run_monitor(args: argparse.Namespace) -> int:
                 csv_path=csv_path,
                 svg_path=svg_path,
                 html_path=html_path,
+                health_path=health_path,
+                health_summary=health_summary,
             )
             print(f"\nSamples collected: {samples}")
+            print(f"Health verdict: {health_summary['overall_status']}")
+            print(f"Health config: {health_summary.get('config_source', 'defaults')}")
+            for gpu_summary in health_summary.get("session_summary", {}).get("gpus", []):
+                avg_util = gpu_summary.get("avg_util_gpu_pct")
+                peak_util = gpu_summary.get("peak_util_gpu_pct")
+                peak_mem = gpu_summary.get("peak_util_mem_pct")
+                max_temp = gpu_summary.get("max_temp_c")
+                max_power = gpu_summary.get("max_power_w")
+                print(
+                    f"GPU {gpu_summary['gpu_index']} summary: "
+                    f"avg util {format_cell(avg_util)}% | peak util {format_cell(peak_util)}% | "
+                    f"peak mem {format_cell(peak_mem)}% | max temp {format_cell(max_temp)}C | "
+                    f"max power {format_cell(max_power)}W"
+                )
+            for issue in health_summary.get("node_issues", []):
+                print(f"Node {issue['status']}: {issue['message']}")
+            for gpu_summary in health_summary.get("gpu_summaries", []):
+                for issue in gpu_summary.get("issues", []):
+                    print(
+                        f"GPU {gpu_summary['gpu_index']} {issue['status']}: "
+                        f"{issue['message']}"
+                    )
             print(f"Metadata JSON: {metadata_path}")
+            print(f"Health JSON: {health_path}")
             print(f"Graph SVG: {svg_path}")
             print(f"Graph HTML: {html_path}")
         except Exception as exc:
@@ -732,6 +812,8 @@ def start_monitor(args: argparse.Namespace) -> int:
         cmd.extend(["--note", args.note])
     if args.demo_gpus != 1:
         cmd.extend(["--demo-gpus", str(args.demo_gpus)])
+    if args.health_config:
+        cmd.extend(["--health-config", args.health_config])
 
     with log_path.open("a", encoding="utf-8") as log_f:
         proc = subprocess.Popen(
@@ -741,8 +823,28 @@ def start_monitor(args: argparse.Namespace) -> int:
             start_new_session=True,
         )
 
+    time.sleep(0.25)
+    exit_code = proc.poll()
+    if exit_code is not None:
+        print(
+            json.dumps(
+                {
+                    "started": False,
+                    "exit_code": exit_code,
+                    "pid": proc.pid,
+                    "pid_file": str(pid_path),
+                    "log_file": str(log_path),
+                    "log_tail": read_log_tail(log_path),
+                    "command": cmd,
+                },
+                indent=2,
+            )
+        )
+        return 1
+
     pid_path.write_text(f"{proc.pid}\n", encoding="utf-8")
     payload = {
+        "started": True,
         "pid": proc.pid,
         "pid_file": str(pid_path),
         "log_file": str(log_path),
@@ -769,6 +871,7 @@ def stop_monitor(args: argparse.Namespace) -> int:
 
     if not process_exists(pid):
         print(f"Process already stopped: {pid}")
+        pid_path.unlink(missing_ok=True)
         return 0
 
     os.kill(pid, signal.SIGTERM)
@@ -787,12 +890,29 @@ def status_monitor(args: argparse.Namespace) -> int:
         print(json.dumps({"pid_file": str(pid_path), "running": False, "reason": "invalid_pid_file"}, indent=2))
         return 1
 
+    if not process_exists(pid):
+        log_path = guess_log_path_from_pid(pid_path)
+        print(
+            json.dumps(
+                {
+                    "pid": pid,
+                    "pid_file": str(pid_path),
+                    "running": False,
+                    "reason": "stale_pid_file",
+                    "log_file": str(log_path),
+                    "log_tail": read_log_tail(log_path),
+                },
+                indent=2,
+            )
+        )
+        return 1
+
     print(
         json.dumps(
             {
                 "pid": pid,
                 "pid_file": str(pid_path),
-                "running": process_exists(pid),
+                "running": True,
             },
             indent=2,
         )

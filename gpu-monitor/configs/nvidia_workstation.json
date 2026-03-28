@@ -1,0 +1,8 @@
+{
+  "temp_warning_c": 82.0,
+  "temp_critical_c": 88.0,
+  "vram_min_free_pct": 8.0,
+  "power_warn_fraction_of_limit": 0.92,
+  "ecc_sbe_warn_count": 10,
+  "min_peak_util_pct": 0.0
+}

@@ -1,0 +1,16 @@
+# monitor-link host aliases (Fedora/Sway host: Z13 or Desktop)
+# Copy into: ~/.bash_aliases
+
+alias cbe="$HOME/Tools/monitor-link/cb-display.sh extend"
+alias cbm="$HOME/Tools/monitor-link/cb-display.sh mirror"
+alias cbtog="$HOME/Tools/monitor-link/cb-display.sh toggle"
+alias cbs="$HOME/Tools/monitor-link/cb-display.sh stop"
+alias cbst="$HOME/Tools/monitor-link/cb-display.sh status"
+
+# Z13-focused mirror defaults (override if needed)
+alias cbmz="CB_LINK_OUTPUT=eDP-1 $HOME/Tools/monitor-link/cb-display.sh mirror"
+
+# Tablet over USB (ADB reverse)
+alias cbt="$HOME/Tools/monitor-link/cb-tablet.sh"
+alias cbts="$HOME/Tools/monitor-link/cb-tablet.sh stop"
+alias cbmr="$HOME/Tools/monitor-link/cb-display.sh mirror && $HOME/Tools/monitor-link/cb-tablet.sh"

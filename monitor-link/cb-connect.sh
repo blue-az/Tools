@@ -1,5 +1,5 @@
 #!/bin/bash
-# cb-connect.sh - Connect to cb-link server from Chromebook
+# cb-connect.sh - Connect to monitor-link server from Chromebook
 
 # Prefer explicit host. Otherwise auto-discover from candidate list.
 SERVER_HOST="${CB_LINK_HOST:-}"

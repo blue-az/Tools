@@ -1,5 +1,5 @@
 #!/bin/bash
-# cb-tablet.sh - Connect Android tablet to cb-link server via ADB reverse
+# cb-tablet.sh - Connect Android tablet to monitor-link server via ADB reverse
 # Run this on the Fedora host (desktop or Z13) with the tablet plugged in.
 
 PORT="${CB_LINK_PORT:-5900}"

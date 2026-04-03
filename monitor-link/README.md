@@ -1,24 +1,34 @@
-# cb-link
+# monitor-link
 
-Use Chromebook (Debian) as a display for Fedora/Sway hosts (Z13 or Desktop) over WiFi VNC.
+Display-link toolkit for Fedora/Sway hosts (Z13 or Desktop).
 
-## Two Modes
+It is used in three closely related ways:
+
+1. Linux-on-Chromebook client over WiFi VNC
+2. USB-tethered Android tablet viewer via ADB reverse
+3. WiFi second-screen or mirror viewer for Android
+
+The first use case depends on Linux on the Chromebook. If that detail is
+omitted, the tool is easy to misread as "just a Chromebook display trick"
+rather than a broader host-to-client display setup.
+
+## Display Modes
 
 | Mode | Description |
 |------|-------------|
-| **extend** | CB is a separate 2nd screen with its own workspaces |
-| **mirror** | CB clones laptop screen (view-only, scaled to fit) |
+| **extend** | client is a separate 2nd screen with its own workspaces |
+| **mirror** | client clones host screen (view-only, scaled to fit) |
 
 ## Quick Start
 
-Cheatsheet: `cb-link-cheatsheet.txt` (optional USB copy path: `/run/media/<user>/<LABEL>/cb-link-cheatsheet.txt`).
+Cheatsheet: `monitor-link-cheatsheet.txt` (optional USB copy path: `/run/media/<user>/<LABEL>/monitor-link-cheatsheet.txt`).
 
 ### Extend Mode (2nd screen)
 ```bash
 # On Fedora host (Z13 or Desktop):
 cbe              # Start extend mode
 
-# On CB:
+# On Linux Chromebook:
 cbv              # Launch viewer (windowed only; use cbcf for fullscreen)
 ```
 
@@ -27,13 +37,13 @@ cbv              # Launch viewer (windowed only; use cbcf for fullscreen)
 # On Fedora host (Z13 or Desktop):
 cbm              # Start mirror mode
 
-# On CB:
+# On Linux Chromebook:
 cbcm             # Connect with auto-scaling
 ```
 
 ### Stop
 ```bash
-# On CB:
+# On Linux Chromebook:
 cbcd             # Disconnect viewer
 
 # On Fedora host (Z13 or Desktop):
@@ -56,19 +66,19 @@ cbts             # Remove ADB reverse
 
 Suggested alias commands:
 ```bash
-alias cbt="~/Tools/cb-link/cb-tablet.sh"
-alias cbts="~/Tools/cb-link/cb-tablet.sh stop"
+alias cbt="~/Tools/monitor-link/cb-tablet.sh"
+alias cbts="~/Tools/monitor-link/cb-tablet.sh stop"
 ```
 
 Version-controlled alias template:
 ```bash
-cp ~/Tools/cb-link/examples/bash_aliases.host ~/.bash_aliases
+cp ~/Tools/monitor-link/examples/bash_aliases.host ~/.bash_aliases
 source ~/.bash_aliases
 ```
 
 Optional version-controlled Sway keybinds (includes `mod+p` mirror):
 ```bash
-echo 'include ~/Tools/cb-link/examples/sway-bindings.host.conf' >> ~/.config/sway/config
+echo 'include ~/Tools/monitor-link/examples/sway-bindings.host.conf' >> ~/.config/sway/config
 ```
 
 ### Script Commands
@@ -86,7 +96,7 @@ echo 'include ~/Tools/cb-link/examples/sway-bindings.host.conf' >> ~/.config/swa
 sudo firewall-cmd --add-port=5900/tcp
 ```
 
-## Chromebook (Client)
+## Linux Chromebook (Client)
 
 ### Aliases (in ~/.bash_aliases)
 ```bash
@@ -100,7 +110,7 @@ cbcs             # Status
 
 Version-controlled Debian CB alias template:
 ```bash
-cp ~/Tools/cb-link/examples/bash_aliases.cb-debian ~/.bash_aliases
+cp ~/Tools/monitor-link/examples/bash_aliases.cb-debian ~/.bash_aliases
 source ~/.bash_aliases
 ```
 
@@ -143,16 +153,35 @@ Or:
 ./cb-connect.sh m --host desktop.local
 ```
 
-### Tablet (Android over USB, no WiFi)
+## Android Tablet Over USB
+
+This path is separate from the Linux-on-Chromebook client. It uses `adb
+reverse` to make the host VNC server reachable from a tethered Android tablet.
+
+### Start
 ```bash
 ./cb-tablet.sh
 ```
-Disconnect:
+
+### Stop
 ```bash
 ./cb-tablet.sh stop
 ```
-Troubleshoot:
+
+### Troubleshoot
 - If the tablet shows extend mode after a mirror session, stop everything (`cbs`) then rerun mirror + tablet (`cbmr` alias if present, or `./cb-display.sh mirror && ./cb-tablet.sh`).
+
+## Android Over WiFi
+
+Android is not limited to the USB-tethered tablet path. Any Android device with
+a suitable VNC viewer can also act as a second screen or mirror viewer over
+WiFi by connecting to the Fedora host's VNC endpoint.
+
+Typical use:
+
+- start `extend` or `mirror` on the Fedora host
+- connect from Android to `hostname.local:5900` or the host IP fallback
+- use the same display mode semantics as the Linux Chromebook client
 
 ## Requirements
 
@@ -161,7 +190,7 @@ Troubleshoot:
 - wl-mirror: `sudo dnf install wl-mirror` (for mirror mode)
 - avahi: `sudo dnf install avahi` (usually pre-installed)
 
-**Chromebook (Debian):**
+**Linux Chromebook (Debian):**
 - TigerVNC viewer: `sudo apt install tigervnc-viewer`
 - SSVNC (for mirror scaling): `sudo apt install ssvnc`
 - avahi: `sudo apt install avahi-daemon` (for hostname.local)

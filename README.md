@@ -6,15 +6,22 @@ Collection of utility tools.
 
 | Tool | Description |
 |------|-------------|
-| [cb-link](cb-link/) | Use Chromebook as a wireless display for Fedora/Sway hosts via VNC |
+| [monitor-link](monitor-link/) | Linux-on-Chromebook and Android tablet display link for Fedora/Sway hosts via VNC and ADB |
 | [device-map](device-map/) | Interactive web map of office devices with specs from dotfiles |
 | [gpu-monitor](gpu-monitor/) | Monitor, record, and graph GPU usage (NVIDIA/ROCm) |
 
-## cb-link
+## monitor-link
 
-WiFi display extension/mirroring between Fedora hosts and Chromebook using VNC. Supports extend mode (2nd screen) and mirror mode (clone).
+Display-link toolkit for Fedora/Sway hosts. Its main roles are:
 
-See [cb-link/README.md](cb-link/README.md) for full documentation.
+- Linux-on-Chromebook client over WiFi VNC
+- USB-tethered Android tablet viewer via ADB reverse
+- WiFi second-screen / mirror path for Android viewers
+
+The Chromebook piece depends on Linux being available on the CB; otherwise the
+point of the tool is easy to misread.
+
+See [monitor-link/README.md](monitor-link/README.md) for full documentation.
 
 ## device-map
 

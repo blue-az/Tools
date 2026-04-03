@@ -1,4 +1,4 @@
-# cb-link Testing Plan
+# monitor-link Testing Plan
 
 Private testing checklist before posting to hexdump.
 

@@ -126,6 +126,56 @@ again after figuring it out properly.
 - The Huawei phone is currently more useful as a rooted OTG-connected mobile
   hardware node than as a mature UART hacking platform.
 
+## UART Follow-Up: What To Watch For
+
+If the original author reposts later with more UART details, the key question
+is not whether a UART exists, but what kind of access it actually provides.
+
+Most likely practical outcomes, in descending order of significance:
+
+1. Boot logs or early kernel logs
+- useful for low-level visibility before Android fully starts
+- meaningful for debugging boot issues or understanding platform behavior
+
+2. A limited serial console or diagnostic shell
+- potentially useful if it exposes commands unavailable through normal Android
+- still valuable even if it is not a full unrestricted console
+
+3. A service/engineering interface
+- could expose vendor diagnostics, maintenance commands, or subsystem access
+- would matter if it reaches hardware layers that ADB does not
+
+4. Proof-of-concept UART only
+- pinout confirmed
+- voltage level confirmed
+- some serial output captured
+- but little day-to-day practical value beyond demonstrating that it works
+
+Less likely but highest-value outcome:
+
+- pre-Android interactive bootloader access with meaningful control
+
+Current best prediction:
+
+- the author will probably confirm the UART path is real
+- they may publish pinout, adapter, voltage, or enablement details
+- they may capture logs or a modest console
+- it is less likely that the repost reveals a transformative capability beyond
+  what rooted ADB plus USB OTG already provides
+
+What would materially increase the Huawei's importance:
+
+- access before Android boots
+- recovery/debug access when USB/ADB is unavailable
+- direct interaction with modem, coprocessor, or service/debug subsystems
+- capabilities not duplicated by normal rooted Android access
+
+What would be interesting but not game-changing:
+
+- read-only logging
+- a fragile or narrow diagnostic interface
+- a UART path that mostly duplicates what root + ADB already expose
+
 ## Why This Is Interesting Relative To An Old Rooted Galaxy Avant
 
 The structural similarity to the rooted Samsung Galaxy Avant is already clear:
